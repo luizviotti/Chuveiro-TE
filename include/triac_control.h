@@ -13,6 +13,8 @@ class ControleTriac {
          */
         ControleTriac();
 
+        ControleTriac(long atrasoPadrao);
+
         /**
          * Metodo para iniciar o controle em setup
          */
@@ -27,7 +29,7 @@ class ControleTriac {
 
         uint8_t pinoTriac;
         hw_timer_t* timerDisparo;
-        volatile long _atrasoMicroSegundos;
+        volatile long atrasoMicroSegundos;
 
         /**
          * Logica de detecção de zero crossing para ondas de tensão alternadas.
@@ -53,7 +55,7 @@ class ControleTriac {
          * Gambiarra para poder usar os métodos estáticos. Para o escopo do projeto isso não será problema pois
          * apenas um TRIAC será controlado por vez.
          */
-        static ControleTriac *_instancia;
+        static ControleTriac *instancia;
 };
 
 #endif
