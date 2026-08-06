@@ -18,8 +18,6 @@ class ControlePID{
         PID pidControleDeValvulas;
         PID pidControleDeResistencia;
 
-        ModoOperacao modo;
-
     public:
         
         ControlePID(
