@@ -7,6 +7,7 @@ ControleTriac::ControleTriac(): ControleTriac(8333) {}
 ControleTriac::ControleTriac(long atrasoPadrao): atrasoMicroSegundos(atrasoPadrao), timerDisparo(nullptr) {}
 
 void ControleTriac::init(uint8_t pinZeroCross, uint8_t pinTriac){
+    instancia = this;
     this->pinoTriac = pinTriac;
 
     pinMode(pinZeroCross, INPUT);
