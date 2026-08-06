@@ -30,7 +30,8 @@ class ControlePID{
             const double& ki_heat,
             const double& kd_heat,
             double& input,
-            double& output,
+            double& output_mix,
+            double& output_heat,
             double& setpoint
         );
 
