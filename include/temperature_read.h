@@ -19,22 +19,28 @@ class LeitorTemperatura{
         const DeviceAddress sensor_frio = {};   //os endereços são imutáveis entre execuções
         const DeviceAddress sensor_misto = {};   //mapeando por index não se tem certeza da ordem mapeada e não é possível determinar qual sensor é cada
 
-        double temperatura_fria;
-        double temperatura_quente;
-        double temperatura_mista;
+        double temperatura_fria = 0, temperatura_quente = 0, temperatura_mista = 0;
+        
+        unsigned long ultimaSolicitacao = 0;
+        const unsigned long TEMPO_CONVERSAO = 400;
+        bool aguardandoConversao = false;
 
     public:
 
         LeitorTemperatura(uint8_t pino_sensores);
+
+        void begin();
+
+        void solicitar();
 
         /**
          * @brief Realiza uma nova leitura das temperaturas
          */
         void atualizarTemperatura();
 
-        double& getTempFria();
-        double& getTempQuente();
-        double& getTempMista();
+        double getTempFria() const;
+        double getTempQuente() const;
+        double getTempMista() const;
 
 
 };
