@@ -15,22 +15,32 @@ class LeitorTemperatura{
         OneWire onewire;
         DallasTemperature sensores;
 
-        const DeviceAddress sensor_quente = {}; //esses valores são empriricos e dependem do endereço de cada unidade de sensor
-        const DeviceAddress sensor_frio = {};   //os endereços são imutáveis entre execuções
-        const DeviceAddress sensor_misto = {};   //mapeando por index não se tem certeza da ordem mapeada e não é possível determinar qual sensor é cada
+        const DeviceAddress sensor_quente = {}; ///< Endereço do sensor quente
+        const DeviceAddress sensor_frio = {};   ///< Endereço do sensor frio
+        const DeviceAddress sensor_misto = {};  ///< Endereço do sensor misto
 
-        double temperatura_fria = 0, temperatura_quente = 0, temperatura_mista = 0;
+        double& temperatura_fria;
+        double& temperatura_quente;
+        double& temperatura_mista;
         
-        unsigned long ultimaSolicitacao = 0;
-        const unsigned long TEMPO_CONVERSAO = 400;
-        bool aguardandoConversao = false;
+        unsigned long ultimaSolicitacao = 0;        ///< Contador de quando foi a ultima solicitação de leitura
+        const unsigned long TEMPO_CONVERSAO = 400;  ///< Constante de tempo de conversão (Para 11 bits de leitura)
+        bool aguardandoConversao = false;           ///< Booleano de conversão
 
     public:
+        /**
+         * @brief Construtor de LeitorTemperatura em memória
+         */
+        LeitorTemperatura(uint8_t pino_sensores, double& fria, double& quente, double& mista);
 
-        LeitorTemperatura(uint8_t pino_sensores);
-
+        /**
+         * @brief Setup e ajuste dos sensores
+         */
         void begin();
 
+        /**
+         * @brief Solicita leitura dos sensores de temperatura (operação não instantânea)
+         */
         void solicitar();
 
         /**
@@ -38,16 +48,6 @@ class LeitorTemperatura{
          */
         void atualizarTemperatura();
 
-        double getTempFria() const;
-        double getTempQuente() const;
-        double getTempMista() const;
-
-
 };
-
-
-
-
-
 
 #endif

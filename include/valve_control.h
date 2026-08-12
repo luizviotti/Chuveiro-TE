@@ -11,8 +11,8 @@ class ControleValvula{
 
     private:
 
-        Servo valvulas_QF;
-        Servo valvula_vazao;
+        Servo valvulas_QF;      ///< Servo motor que controla a abertura das válvulas quente e fria
+        Servo valvula_vazao;    ///< Servo motor que controla a abertura da válvula de vazão
 
         double& abertura_quente;
         double& vazao;
@@ -21,8 +21,15 @@ class ControleValvula{
         uint8_t _pinservo_vazao;
 
     public:
-
+        /**
+         * @brief Construtor da classe de controle de válvula
+         */
         ControleValvula(double& abertura_quente, double& vazao, uint8_t pinservo_QF, uint8_t pinservo_vazao);
+
+        /**
+         * @brief Setup dos servo motores e alocação de PWM no esp
+         */
+        void begin();
         
         /**
          * @brief atualiza a posição das valvulas a cada loop

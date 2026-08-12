@@ -15,8 +15,8 @@ enum ModoOperacao{
 class ControlePID{
     
     private:
-        PID pidControleDeValvulas;
-        PID pidControleDeResistencia;
+        PID pidControleDeValvulas;      ///< PID para o controle de válvulas. Atua enquanto temp_quente > setpoint
+        PID pidControleDeResistencia;   ///< PID para o controle de potência na resistência. Atua enquanto temp_quente < setpoint
 
     public:
         
@@ -32,6 +32,11 @@ class ControlePID{
             double& output_heat,
             double& setpoint
         );
+
+        /**
+         * @brief Setup dos PID para funcionamento.
+         */
+        void begin();
 
         /**
          * @brief Altera o modo de controle para a função de esquentar.
