@@ -5,15 +5,15 @@ ControleSsr* ControleSsr::instancia = nullptr;
 //periodo de uma onda, dada a frequência de 60hz
 static constexpr uint32_t PERIODO_CICLO_US = 1000000UL / 60UL;
 
-ControleSsr::ControleSsr(int ciclos_padrao, int ciclos_analisados):
+ControleSsr::ControleSsr(uint8_t pinSsr,int ciclos_padrao, int ciclos_analisados):
     _ciclosLigados(ciclos_padrao),
     _ciclosAnalisados(max(ciclos_analisados, 1)),
-    _timerDisparo(nullptr) {}
+    _timerDisparo(nullptr), 
+    _pinoSsr(pinSsr) {}
 
 
-void ControleSsr::init(uint8_t pinoSsr){
+void ControleSsr::begin(){
     instancia = this;
-    _pinoSsr = pinoSsr;
     pinMode(_pinoSsr, OUTPUT);
     digitalWrite(_pinoSsr, LOW);
 

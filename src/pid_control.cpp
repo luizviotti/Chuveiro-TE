@@ -15,13 +15,17 @@ ControlePID::ControlePID(
     
 ):  pidControleDeValvulas(&input, &output_mix, &setpoint, kp_mix, ki_mix, kd_mix, DIRECT),
     pidControleDeResistencia(&input, &output_heat, &setpoint, kp_heat, ki_heat, kd_heat, DIRECT)
-    {
-        pidControleDeResistencia.SetOutputLimits(0, 100); //100 significa potencia máxima
-        pidControleDeResistencia.SetSampleTime(100); //sample time maior, o proprio controle burst fire vai demorar mais que isso. nao faz sentido computar todo loop.
+    {}
 
-        pidControleDeValvulas.SetOutputLimits(0, 100); //100 significa valvula quente 100% aberta, frio 100%fechada
-        pidControleDeValvulas.SetSampleTime(20); //sample time menor, pois o controle via misturas já é mais volátil.
-    }
+
+void ControlePID::begin(){
+    pidControleDeResistencia.SetOutputLimits(0, 100); //100 significa potencia máxima
+    pidControleDeResistencia.SetSampleTime(100); //sample time maior, o proprio controle burst fire vai demorar mais que isso. nao faz sentido computar todo loop.
+
+    pidControleDeValvulas.SetOutputLimits(0, 100); //100 significa valvula quente 100% aberta, frio 100%fechada
+    pidControleDeValvulas.SetSampleTime(20); //sample time menor, pois o controle via misturas já é mais volátil.
+
+}    
 
 void ControlePID::setModeHeat(){
     pidControleDeValvulas.SetMode(MANUAL);

@@ -1,7 +1,7 @@
 #include "temperature_read.h"
 
-LeitorTemperatura::LeitorTemperatura(uint8_t pino_sensores):
-onewire(pino_sensores), sensores(&onewire) 
+LeitorTemperatura::LeitorTemperatura(uint8_t pino_sensores, double& fria, double& quente, double& mista):
+onewire(pino_sensores), sensores(&onewire) , temperatura_fria(fria), temperatura_quente(quente), temperatura_mista(mista) 
 {}
 
 void LeitorTemperatura::begin(){
@@ -29,7 +29,3 @@ void LeitorTemperatura::atualizarTemperatura(){
         solicitar();
     }
 }
-
-double LeitorTemperatura::getTempFria() const   { return temperatura_fria; }
-double LeitorTemperatura::getTempQuente() const { return temperatura_quente; }
-double LeitorTemperatura::getTempMista() const    { return temperatura_mista; }
