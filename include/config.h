@@ -32,7 +32,9 @@ namespace Config{
 
     constexpr int CICLOS_ANALISADOS_PADRAO = 20;
 
+    constexpr float MODULO_TOLERANCIA = 1.0; //1 grau de tolerância para ativar / desativar o ssr
 
+    constexpr int ABERTURA_MAXIMA_VALVULA; //valor ainda precisa ser determinado quando a válvula for desenvolvida
 }
 
 
