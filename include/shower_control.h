@@ -5,6 +5,10 @@
 #include "ssr_control.h"
 #include "temperature_read.h"
 #include "valve_control.h"
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+
 
 /**
  * @brief Classe que centraliza e orquestra o funcionamento do chuveiro
@@ -26,6 +30,7 @@ class Controller{
         ControleSsr ssr;                ///< Controle de potência
         LeitorTemperatura leitor_temp;  ///< Sensores de temperatura
         ControleValvula valvulas;       ///< Válvulas do sistema
+        LiquidCrystal_I2C display;       ///< Display do protótipo
 
         uint8_t pin_pot_temp;           ///< Pino analógico de input de temperatura
         uint8_t pin_pot_vazao;          ///< Pino analógico de input de vazão
@@ -45,6 +50,25 @@ class Controller{
          */
         void begin();
 
+        /**
+         * @brief Pipeline de execução do loop principal.
+         * 
+         * Faz a leitura dos sensores/entradas, define modo de operação, Calcula PID, atualiza o display.
+         * O controle de SSR ocorre paralelamente de forma assíncrona via timer de hardware.
+         * 
+         * Lê entradas (potênciometros e sensores) -> Define Modo de operação -> Atualiza PID -> Ajusta Válvulas -> Atualiza Display -> Reinicia
+         */
+        void run();
+
+        /**
+         * @brief Atualiza as informações de temperatura e vazão no display
+         */
+        void atualizarDisplay();
+
+        /**
+         * @brief Define o modo de operação do chuveiro (MIX_ONLY ou HEAT_ASSIST) e realiza a transição entre modos
+         */
+        void definirModoOperacao();
 };
 
 
