@@ -8,7 +8,6 @@ enum ModoOperacao{
     MIX_ONLY,
     HEAT_ASSIST
 };
-
 /**
  * @brief Classe que decide qual tipo de controle PID será aplicado no momento;
  */

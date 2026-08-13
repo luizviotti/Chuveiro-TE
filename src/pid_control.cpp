@@ -29,12 +29,16 @@ void ControlePID::begin(){
 
 void ControlePID::setModeHeat(){
     pidControleDeValvulas.SetMode(MANUAL);
+
+    pidControleDeResistencia.SetMode(MANUAL);
     pidControleDeResistencia.SetMode(AUTOMATIC);
 }
 
 void ControlePID::setModeMix(){
-    pidControleDeResistencia.SetMode(AUTOMATIC);
+    pidControleDeResistencia.SetMode(MANUAL);
+
     pidControleDeValvulas.SetMode(MANUAL);
+    pidControleDeResistencia.SetMode(AUTOMATIC);
 }
 
 bool ControlePID::computar(ModoOperacao modo){
