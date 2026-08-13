@@ -29,6 +29,16 @@ class ControleSsr{
          */
         void setNumeroCiclos(int ciclos);
 
+        /**
+         * @brief Habilita controle ssr
+         */
+        void IRAM_ATTR enable();
+
+        /**
+         * @brief Desabilita o controle ssr
+         */
+        void IRAM_ATTR disable();
+
     private:
         
         uint8_t _pinoSsr;               ///< Pino de controle do SSR

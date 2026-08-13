@@ -20,8 +20,6 @@ void ControleSsr::begin(){
     _timerDisparo = timerBegin(0, 80, true);
     timerAttachInterrupt(_timerDisparo, ControleSsr::timerDisparoWrapper, true);
 
-    faseOn = false;
-    iniciarFase();
 }
 
 void ControleSsr::setNumeroCiclos(int ciclos){
@@ -55,4 +53,15 @@ void IRAM_ATTR ControleSsr::iniciarFase(){
     uint64_t duracaoMicroSegundos = (uint64_t)ciclosNestaFase * PERIODO_CICLO_US;
     timerAlarmWrite(_timerDisparo, duracaoMicroSegundos, false);
     timerAlarmEnable(_timerDisparo);
+}
+
+void ControleSsr::enable(){
+    faseOn = false;
+    timerWrite(_timerDisparo, 0);
+    iniciarFase();
+}
+
+void ControleSsr::disable(){
+    timerAlarmDisable(_timerDisparo);
+    digitalWrite(_pinoSsr, LOW);
 }
