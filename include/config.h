@@ -17,6 +17,10 @@ namespace Config{
     constexpr uint8_t PIN_SERVO_VAZAO = 19;
     constexpr uint8_t PIN_SERVO_QF =    18;
     constexpr uint8_t PIN_SSR =         17;
+    constexpr uint8_t LCD_ADDR =        0x27;
+
+    constexpr uint8_t COLUNAS_DISPLAY = 16;
+    constexpr uint8_t LINHAS_DISPLAY = 2;
 
     constexpr double KP_MIX = 1;
     constexpr double KI_MIX = 1;
