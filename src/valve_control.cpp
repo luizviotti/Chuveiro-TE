@@ -1,4 +1,5 @@
 #include "valve_control.h"
+#include "config.h"
 
 ControleValvula::ControleValvula(double& abertura_quente, double& vazao, uint8_t pinservo_QF, uint8_t pinservo_vazao):
 abertura_quente(abertura_quente), vazao(vazao), _pinservo_QF(pinservo_QF), _pinservo_vazao(pinservo_vazao)
@@ -12,6 +13,15 @@ void ControleValvula::begin(){
 }
 
 void ControleValvula::atualizarValvulas(){
-    valvulas_QF.write(abertura_quente);
+    valvulas_QF.write(converterPIDparaAngulo(abertura_quente));
     valvula_vazao.write(vazao);
+}
+
+void ControleValvula::abrirValvulaQuente(){
+    abertura_quente = 100;
+    valvulas_QF.write(Config::ABERTURA_MAXIMA_VALVULA);
+}
+
+int ControleValvula::converterPIDparaAngulo(double PID_output){
+    return round(PID_output * Config::ABERTURA_MAXIMA_VALVULA/100);
 }

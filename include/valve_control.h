@@ -37,6 +37,11 @@ class ControleValvula{
         void atualizarValvulas();
 
         /**
+         * @brief Abre por completo a válvula quente
+         */
+        void abrirValvulaQuente();
+
+        /**
          * @brief Converte output PID para angulo correspondente no registro motorizado. Apenas esqueleto do método, necessário testar empiricamente primeiro para definir conversões.
          */
         static int converterPIDparaAngulo(double PID_output);
