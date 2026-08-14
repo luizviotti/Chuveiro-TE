@@ -9,7 +9,7 @@ Controller::Controller():
         input_temp, output_mix, output_heat, temp_mista
         ),
 
-    ssr(Config::PIN_SSR),
+    ssr(Config::PIN_SSR, &output_heat_compartilhado),
 
     leitor_temp(Config::PIN_TEMP_SENSOR, temp_fria, temp_quente, temp_mista),
 
@@ -56,6 +56,10 @@ void Controller::run(){
     //Computar PID
     pid.computar(modo);
 
+    //atualizar variável compartilhada com a isr
+    if(modo == ModoOperacao::HEAT_ASSIST){
+        output_heat_compartilhado = output_heat;
+    }
     //Atualizar Válvulas
     valvulas.atualizarValvulas();
 

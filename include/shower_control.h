@@ -24,6 +24,7 @@ class Controller{
         double temp_fria = 0;           ///< Temperatura da fonte fria de água em °C
         double temp_quente = 0;         ///< Temperatura da fonte quente de água em °C
         double temp_mista = 0;          ///< Temperatura da saída do chuveiro em °C
+        volatile float output_heat_compartilhado = 0; ///< Variável compartilhada entre loop e isr
 
         ModoOperacao modo;              ///< Modo de operação atual (MIX_ONLY ou HEAT_ASSIST)
         ControlePID pid;                ///< PID que controla a abertura das válvulas/potência
