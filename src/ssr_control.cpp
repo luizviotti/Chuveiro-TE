@@ -1,15 +1,18 @@
 #include "ssr_control.h"
+#include "config.h"
 
 ControleSsr* ControleSsr::instancia = nullptr;
 
 //periodo de uma onda, dada a frequência de 60hz
 static constexpr uint32_t PERIODO_CICLO_US = 1000000UL / 60UL;
 
-ControleSsr::ControleSsr(uint8_t pinSsr,int ciclos_padrao, int ciclos_analisados):
+ControleSsr::ControleSsr(uint8_t pinSsr, volatile float* pid_output, int ciclos_padrao, int ciclos_analisados):
     _ciclosLigados(ciclos_padrao),
     _ciclosAnalisados(max(ciclos_analisados, 1)),
     _timerDisparo(nullptr), 
-    _pinoSsr(pinSsr) {}
+    _pinoSsr(pinSsr),
+    output_pid_compartilhado(pid_output) 
+    {}
 
 
 void ControleSsr::begin(){
@@ -28,6 +31,10 @@ void ControleSsr::setNumeroCiclos(int ciclos){
 }
 
 void IRAM_ATTR ControleSsr::handleTimerDisparo(){
+    //aqui o valor de ciclos ligados será alterado se a fase alternar de on -> off. !faseOn ocorre primeiro
+    if(!faseOn){
+        _ciclosLigados = converterPIDparaCiclos(*output_pid_compartilhado);
+    }
     faseOn = !faseOn;
     iniciarFase();
 }
@@ -64,4 +71,8 @@ void ControleSsr::enable(){
 void ControleSsr::disable(){
     timerAlarmDisable(_timerDisparo);
     digitalWrite(_pinoSsr, LOW);
+}
+
+int ControleSsr::converterPIDparaCiclos(float PID_output){
+    return round(PID_output * Config::CICLOS_ANALISADOS_PADRAO/100);
 }

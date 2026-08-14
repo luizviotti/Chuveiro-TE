@@ -17,7 +17,7 @@ class ControleSsr{
          * Para um valor de 20, o controle PID é aplicado via burst fire ao longo de
          * 20 ciclos de rede antes que o valor de ciclos ativos seja recalculado.
          */
-        ControleSsr(uint8_t pinSsr,int ciclos_padrao = 0, int ciclos_analisados = 20);
+        ControleSsr(uint8_t pinSsr, volatile float* output_pid, int ciclos_padrao = 0, int ciclos_analisados = 20);
 
         /**
          * @brief Método para iniciar o controle no setup
@@ -39,13 +39,19 @@ class ControleSsr{
          */
         void IRAM_ATTR disable();
 
+        /**
+         * @brief Converte o output PID para um intervá-lo de ciclos
+         */
+        static int converterPIDparaCiclos(float PID_OUTPUT);
+
     private:
         
-        uint8_t _pinoSsr;               ///< Pino de controle do SSR
-        hw_timer_t* _timerDisparo;      ///< Timer de hardware do esp32
-        volatile int _ciclosLigados;    ///< Quantidade de ciclos em que a onda alternada é transmitida
-        int _ciclosAnalisados;          ///< Amostragem total para controle burst firing
-        volatile bool faseOn;           ///< Indicador de qual fase do controle está ativa
+        uint8_t _pinoSsr;                           ///< Pino de controle do SSR
+        hw_timer_t* _timerDisparo;                  ///< Timer de hardware do esp32
+        volatile int _ciclosLigados;                ///< Quantidade de ciclos em que a onda alternada é transmitida
+        int _ciclosAnalisados;                      ///< Amostragem total para controle burst firing
+        volatile bool faseOn;                       ///< Indicador de qual fase do controle está ativa
+        volatile float* output_pid_compartilhado;   ///< Output do pid compartilhado
 
         /**
          * @brief Lógica de disparo de timer para controle de potência.
