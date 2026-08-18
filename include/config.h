@@ -10,6 +10,7 @@
  */
 namespace Config{
 
+    //Pinagem do esp
     constexpr uint8_t PIN_FLUX_POT =    34;
     constexpr uint8_t PIN_TEMP_POT =    35;
     constexpr uint8_t PIN_FLUX_SENSOR = 32;
@@ -19,25 +20,33 @@ namespace Config{
     constexpr uint8_t PIN_SSR =         17;
     constexpr uint8_t LCD_ADDR =        0x27;
 
+    //Configurações do display
     constexpr uint8_t COLUNAS_DISPLAY = 16;
     constexpr uint8_t LINHAS_DISPLAY = 2;
 
+    //Configurações do PID de mistura
     constexpr double KP_MIX = 1;
     constexpr double KI_MIX = 1;
     constexpr double KD_MIX = 1;
 
+    //Configurações do PID de aquecimento
     constexpr double KP_HEAT = 1;
     constexpr double KI_HEAT = 1;
     constexpr double KD_HEAT = 1;
 
+    //Configurações de controle do SSR
     constexpr int CICLOS_ANALISADOS_PADRAO = 20;
-
     constexpr float MODULO_TOLERANCIA = 1.0; //1 grau de tolerância para ativar / desativar o ssr
 
+    //Configurações das válvulas motorizadas
     constexpr int ABERTURA_MAXIMA_VALVULA; //valor ainda precisa ser determinado quando a válvula for desenvolvida
 
+    //Variaveis auxiliares para leitura e escrita de variáveis nas ISR
     portMUX_TYPE ssrMux = portMUX_INITIALIZER_UNLOCKED; //mecânismo que garante que não hajam leituras e escritas simultâneas nas ISR
     portMUX_TYPE flowMux = portMUX_INITIALIZER_UNLOCKED; 
+
+    //Configurações de segurança de vazão
+    constexpr float VAZAO_MINIMA_NECESSARIA = 15; //ainda deve ser decidido
 }
 
 
