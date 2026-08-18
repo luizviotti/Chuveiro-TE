@@ -14,8 +14,6 @@ Chuveiro eletrônico que controla automáticamente válvulas e resistor para ati
 ## Módulos
 
 Lista rápida das classes do projeto, cada um com link para sua seção detalhada abaixo.
-
-| Classe |
 | [Controle de potência](#controlessr) | 
 | [Leitura de vazão](#leitorvazao) | 
 | [PID](#controlpid) |
