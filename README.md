@@ -1,6 +1,6 @@
 # Chuveiro Termoeletrônico
 
-Chuveiro eletrônico que controla automáticamente válvulas e resistor para atingir a temperatura desejada de forma ótima.
+Chuveiro eletrônico que controla automaticamente válvulas e resistor para atingir a temperatura desejada de forma ótima.
 
 ## Sumário
 
