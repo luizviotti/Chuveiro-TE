@@ -137,7 +137,31 @@ atualiza display
 
 ## Arquitetura
 
-Diagrama ou descrição de como os módulos se conectam entre si.
+```
+.
+├── include/
+│   ├── config.h
+│   ├── flow_sensor.h
+│   ├── pid_control.h
+│   ├── README
+│   ├── shower_control.h
+│   ├── ssr_control.h
+│   ├── temperature_read.h
+│   └── valve_control.h
+├── lib/
+├── src/
+│   ├── flow_sensor.cpp
+│   ├── main.cpp
+│   ├── pid_control.cpp
+│   ├── shower_control.cpp
+│   ├── ssr_control.cpp
+│   ├── temperature_read.cpp
+│   └── valve_control.cpp
+├── test/
+├── .gitignore
+├── platformio.ini
+└── README.md
+```
 
 ---
 
