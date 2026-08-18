@@ -35,6 +35,9 @@ namespace Config{
     constexpr float MODULO_TOLERANCIA = 1.0; //1 grau de tolerância para ativar / desativar o ssr
 
     constexpr int ABERTURA_MAXIMA_VALVULA; //valor ainda precisa ser determinado quando a válvula for desenvolvida
+
+    portMUX_TYPE ssrMux = portMUX_INITIALIZER_UNLOCKED; //mecânismo que garante que não hajam leituras e escritas simultâneas nas ISR
+    portMUX_TYPE flowMux = portMUX_INITIALIZER_UNLOCKED; 
 }
 
 

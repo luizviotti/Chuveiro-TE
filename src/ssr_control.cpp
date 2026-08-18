@@ -6,12 +6,11 @@ ControleSsr* ControleSsr::instancia = nullptr;
 //periodo de uma onda, dada a frequência de 60hz
 static constexpr uint32_t PERIODO_CICLO_US = 1000000UL / 60UL;
 
-ControleSsr::ControleSsr(uint8_t pinSsr, volatile float* pid_output, int ciclos_padrao, int ciclos_analisados):
+ControleSsr::ControleSsr(uint8_t pinSsr, int ciclos_padrao, int ciclos_analisados):
     _ciclosLigados(ciclos_padrao),
     _ciclosAnalisados(max(ciclos_analisados, 1)),
     _timerDisparo(nullptr), 
-    _pinoSsr(pinSsr),
-    output_pid_compartilhado(pid_output) 
+    _pinoSsr(pinSsr)
     {}
 
 
@@ -25,15 +24,19 @@ void ControleSsr::begin(){
 
 }
 
-void ControleSsr::setNumeroCiclos(int ciclos){
+void ControleSsr::setNumeroCiclos(float ciclos){
     if(ciclos <= 0){ return; }
-    this->_ciclosLigados = ciclos;
+    portENTER_CRITICAL(&Config::ssrMux);
+    output_pid_compartilhado = ciclos;
+    portEXIT_CRITICAL(&Config::ssrMux);
 }
 
 void IRAM_ATTR ControleSsr::handleTimerDisparo(){
     //aqui o valor de ciclos ligados será alterado se a fase alternar de on -> off. !faseOn ocorre primeiro
-    if(!faseOn){
-        _ciclosLigados = converterPIDparaCiclos(*output_pid_compartilhado);
+    if(faseOn){
+        portENTER_CRITICAL_ISR(&Config::ssrMux);
+        _ciclosLigados = converterPIDparaCiclos(output_pid_compartilhado);
+        portEXIT_CRITICAL_ISR(&Config::ssrMux); //previne erros de leitura, impossibilita acesso e escrita simultânea 
     }
     faseOn = !faseOn;
     iniciarFase();
