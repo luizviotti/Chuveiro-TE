@@ -5,6 +5,7 @@
 #include "ssr_control.h"
 #include "temperature_read.h"
 #include "valve_control.h"
+#include "flow_sensor.h"
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -24,14 +25,15 @@ class Controller{
         double temp_fria = 0;           ///< Temperatura da fonte fria de água em °C
         double temp_quente = 0;         ///< Temperatura da fonte quente de água em °C
         double temp_mista = 0;          ///< Temperatura da saída do chuveiro em °C
-        volatile float output_heat_compartilhado = 0; ///< Variável compartilhada entre loop e isr
 
         ModoOperacao modo;              ///< Modo de operação atual (MIX_ONLY ou HEAT_ASSIST)
         ControlePID pid;                ///< PID que controla a abertura das válvulas/potência
         ControleSsr ssr;                ///< Controle de potência
         LeitorTemperatura leitor_temp;  ///< Sensores de temperatura
         ControleValvula valvulas;       ///< Válvulas do sistema
-        LiquidCrystal_I2C display;       ///< Display do protótipo
+        LiquidCrystal_I2C display;      ///< Display do protótipo
+        LeitorVazao leitor_vazao;       ///< Leitor de vazão do protótipo - segurança
+        
 
         uint8_t pin_pot_temp;           ///< Pino analógico de input de temperatura
         uint8_t pin_pot_vazao;          ///< Pino analógico de input de vazão

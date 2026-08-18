@@ -9,13 +9,15 @@ Controller::Controller():
         input_temp, output_mix, output_heat, temp_mista
         ),
 
-    ssr(Config::PIN_SSR, &output_heat_compartilhado),
+    ssr(Config::PIN_SSR),
 
     leitor_temp(Config::PIN_TEMP_SENSOR, temp_fria, temp_quente, temp_mista),
 
     valvulas(output_mix, input_vazao, Config::PIN_SERVO_QF, Config::PIN_SERVO_VAZAO),
 
     display(Config::LCD_ADDR, Config::COLUNAS_DISPLAY, Config::LINHAS_DISPLAY),
+
+    leitor_vazao(Config::PIN_FLUX_SENSOR),
 
     pin_pot_temp(Config::PIN_TEMP_POT),
 
@@ -34,10 +36,8 @@ void Controller::begin(){
     ssr.begin();
     leitor_temp.begin();
     valvulas.begin();
+    leitor_vazao.begin();
 
-    //pin_pot_temp -> leitura analógica
-    //pin_pot_vazao -> leitura análogica
-    //pin_flux_sensor -> ?
 }
 
 void Controller::run(){
@@ -46,6 +46,9 @@ void Controller::run(){
     input_vazao = analogRead(pin_pot_vazao)/4095.0f * 100.0f; //valor percentual, multiplica-se a leitura analógica por 1000
 
     input_temp = 20.0f + analogRead(pin_pot_temp)/4095.0f * 25.0f; //20c -> leitura mínima | 25c -> Incremento máximo | 45c -> Temperatura máxima
+
+    //atualizando leituras de vazão
+    leitor_vazao.atualizarLeitura();
 
     //leitura dos sensores de temperatura
     leitor_temp.atualizarTemperatura();
@@ -58,7 +61,7 @@ void Controller::run(){
 
     //atualizar variável compartilhada com a isr
     if(modo == ModoOperacao::HEAT_ASSIST){
-        output_heat_compartilhado = output_heat;
+        ssr.setNumeroCiclos(output_heat);
     }
     //Atualizar Válvulas
     valvulas.atualizarValvulas();
@@ -80,8 +83,15 @@ void Controller::atualizarDisplay(){
 
 void Controller::definirModoOperacao(){
     float diff = input_temp - temp_quente;
+    //input_temp - temp_quente <= 0 -> fonte quente dá conta
+    if(diff <= -Config::MODULO_TOLERANCIA || !leitor_vazao.vazaoSegura()){
+        modo = MIX_ONLY;
+        pid.setModeMix();
+        pid.computar(modo);
+        ssr.disable();
+    }
     //input_temp - temp_quente >= 0 -> fonte quente insuficiente
-    if(diff >= Config::MODULO_TOLERANCIA){
+    else if(diff >= Config::MODULO_TOLERANCIA){
         modo = HEAT_ASSIST;
         valvulas.abrirValvulaQuente();
         output_heat = 0;
@@ -89,11 +99,5 @@ void Controller::definirModoOperacao(){
         pid.computar(modo);
         ssr.enable();
     }
-    //input_temp - temp_quente <= 0 -> fonte quente dá conta
-    else if(diff <= -Config::MODULO_TOLERANCIA){
-        modo = MIX_ONLY;
-        pid.setModeMix();
-        pid.computar(modo);
-        ssr.disable();
-    }
+
 }
