@@ -25,7 +25,9 @@ Controller::Controller():
 
     pin_pot_vazao(Config::PIN_FLUX_POT),
 
-    pin_flux_sensor(Config::PIN_FLUX_SENSOR)
+    pin_flux_sensor(Config::PIN_FLUX_SENSOR),
+
+    pin_ON_OFF(Config::PIN_ON_OFF)
 
     {}
 
@@ -46,7 +48,7 @@ void Controller::begin(){
 }
 
 void Controller::run(){
-    
+    if(!estado_atual){ return; }
     //lendo input de temperatura e vazão
     input_vazao = analogRead(pin_pot_vazao)/4095.0f * 100.0f; //valor percentual, multiplica-se a leitura analógica por 1000
 
@@ -108,7 +110,7 @@ void Controller::definirModoOperacao(){
 }
 
 void IRAM_ATTR Controller::chave(){
-    ligado = !ligado; 
+    estado_atual = !estado_atual; 
 }
 
 void IRAM_ATTR Controller::wrapperChave(){

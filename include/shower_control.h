@@ -39,10 +39,11 @@ class Controller{
         uint8_t pin_pot_vazao;          ///< Pino analógico de input de vazão
         uint8_t pin_flux_sensor;        ///< Pino do sensor de fluxo
 
-        uint8_t pin_ON_OFF;             ///< Pino do botão start, stop
-        volatile bool ligado;           ///< Booleano que indica o funcionamento do sistema
+        uint8_t pin_ON_OFF;                     ///< Pino do botão start, stop
+        volatile bool estado_atual = false;     ///< Booleano que indica o funcionamento do sistema (on, off)
+        bool ultimo_estado = false;             ///< Booleano que indica o ultimo estado de funcionamento (on, off); 
 
-        static Controller* instancia;          ///< wrapper para utilizar pinInterrupt
+        static Controller* instancia;           ///< wrapper para utilizar pinInterrupt
 
     public:
 
@@ -87,10 +88,22 @@ class Controller{
          * @brief Wrapper para conseguir utilizar a chave em attach pin interrupt.
          */
         static void IRAM_ATTR wrapperChave();
+
+        /**
+         * @brief Prepara o chuveiro para ligar
+         */
+        void liga();
+
+        /**
+         * @brief Prepara o chuveiro para desligar
+         */
+        void desliga();
+
+        /**
+         * @brief Detecta quando o estado do chuveiro foi desligado ou ligado e chama a função correspondente
+         */
+        void transicao();
 };
-
-
-
 
 
 #endif
