@@ -39,6 +39,11 @@ class Controller{
         uint8_t pin_pot_vazao;          ///< Pino analógico de input de vazão
         uint8_t pin_flux_sensor;        ///< Pino do sensor de fluxo
 
+        uint8_t pin_ON_OFF;             ///< Pino do botão start, stop
+        volatile bool ligado;           ///< Booleano que indica o funcionamento do sistema
+
+        static Controller* instancia;          ///< wrapper para utilizar pinInterrupt
+
     public:
 
         /**
@@ -72,6 +77,16 @@ class Controller{
          * @brief Define o modo de operação do chuveiro (MIX_ONLY ou HEAT_ASSIST) e realiza a transição entre modos
          */
         void definirModoOperacao();
+
+        /**
+         * @brief Coloca o esp em modo de repouso, desliga o funcionamento do sistema
+         */
+        void IRAM_ATTR chave();
+
+        /**
+         * @brief Wrapper para conseguir utilizar a chave em attach pin interrupt.
+         */
+        static void IRAM_ATTR wrapperChave();
 };
 
 

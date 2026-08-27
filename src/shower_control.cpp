@@ -1,6 +1,8 @@
 #include "shower_control.h"
 #include "config.h"
 
+Controller* Controller::instancia = nullptr;
+
 Controller::Controller():
     modo(ModoOperacao::MIX_ONLY),
 
@@ -28,6 +30,7 @@ Controller::Controller():
     {}
 
 void Controller::begin(){
+    instancia = this;
 
     display.init();
     display.backlight();
@@ -38,6 +41,8 @@ void Controller::begin(){
     valvulas.begin();
     leitor_vazao.begin();
 
+    pinMode(pin_ON_OFF, INPUT_PULLUP);
+    attachInterrupt(pin_ON_OFF, wrapperChave, FALLING);
 }
 
 void Controller::run(){
@@ -100,4 +105,12 @@ void Controller::definirModoOperacao(){
         ssr.enable();
     }
 
+}
+
+void IRAM_ATTR Controller::chave(){
+    ligado = !ligado; 
+}
+
+void IRAM_ATTR Controller::wrapperChave(){
+    if(instancia) instancia->chave();
 }
