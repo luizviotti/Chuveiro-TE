@@ -1,6 +1,13 @@
 #include <Arduino.h>
 
+#include "shower_control.h"
 
-void setup(){}
+Controller chuveiro;
 
-void loop(){}
+void setup(){
+    chuveiro.begin();
+}
+
+void loop(){
+    chuveiro.run();
+}
