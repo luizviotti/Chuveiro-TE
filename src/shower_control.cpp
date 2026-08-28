@@ -48,7 +48,13 @@ void Controller::begin(){
 }
 
 void Controller::run(){
-    if(!estado_atual){ return; }
+    if(estado_atual != ultimo_estado && estado_atual == false){ 
+        //se o estado atual for diferente do estado anterior, e o estado atual for desligado, roda-se o protocolo de se desligar
+        desliga();
+    }
+
+    if(!estado_atual) { return; } //sistema desligado não faz nada
+
     //lendo input de temperatura e vazão
     input_vazao = analogRead(pin_pot_vazao)/4095.0f * 100.0f; //valor percentual, multiplica-se a leitura analógica por 1000
 
@@ -115,4 +121,22 @@ void IRAM_ATTR Controller::chave(){
 
 void IRAM_ATTR Controller::wrapperChave(){
     if(instancia) instancia->chave();
+}
+
+void Controller::desliga(){
+
+    //desliga o controle de potência da resistência
+    ssr.disable(); 
+
+    //zera as variaveis de controle
+    output_heat = 0;
+    output_mix = 0;
+    temp_fria = 0;
+    temp_quente = 0;
+    temp_mista = 0;
+    input_vazao = 0;
+
+    //fecha as válvulas, encerrando a saída de água.
+    valvulas.atualizarValvulas();
+
 }

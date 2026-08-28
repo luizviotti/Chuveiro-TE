@@ -90,19 +90,10 @@ class Controller{
         static void IRAM_ATTR wrapperChave();
 
         /**
-         * @brief Prepara o chuveiro para ligar
-         */
-        void liga();
-
-        /**
          * @brief Prepara o chuveiro para desligar
          */
         void desliga();
 
-        /**
-         * @brief Detecta quando o estado do chuveiro foi desligado ou ligado e chama a função correspondente
-         */
-        void transicao();
 };
 
 
