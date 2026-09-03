@@ -41,7 +41,7 @@ void ControlePID::setModeMix(){
     pidControleDeResistencia.SetMode(AUTOMATIC);
 }
 
-bool ControlePID::computar(ModoOperacao modo){
+void ControlePID::computar(ModoOperacao modo){
     if(modo == MIX_ONLY){
         pidControleDeValvulas.Compute();
     }

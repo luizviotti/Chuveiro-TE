@@ -50,7 +50,7 @@ class ControlePID{
         /**
          * @brief Atualiza as variaveis de output com base no input e no setpoint e no modo de operação atual
          */
-        bool computar(ModoOperacao modo);
+        void computar(ModoOperacao modo);
 };
 
 #endif
