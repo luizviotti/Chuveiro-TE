@@ -15,9 +15,9 @@ class LeitorTemperatura{
         OneWire onewire;
         DallasTemperature sensores;
 
-        const DeviceAddress sensor_quente = {}; ///< Endereço do sensor quente
-        const DeviceAddress sensor_frio = {};   ///< Endereço do sensor frio
-        const DeviceAddress sensor_misto = {};  ///< Endereço do sensor misto
+        const DeviceAddress sensor_quente = {0x28, 0x96, 0xE7, 0x47, 0x00, 0x00, 0x00, 0xF0}; ///< Endereço do sensor quente
+        const DeviceAddress sensor_frio = {0x28, 0x47, 0x93, 0x4A, 0x00, 0x00, 0x00, 0xEC};   ///< Endereço do sensor frio
+        const DeviceAddress sensor_misto = {0x28, 0x83, 0x9E, 0x25, 0x00, 0x00, 0x00, 0x49};  ///< Endereço do sensor misto
 
         double& temperatura_fria;
         double& temperatura_quente;
