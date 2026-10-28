@@ -24,7 +24,11 @@ void ControlePID::begin(){
 
     pidControleDeValvulas.SetOutputLimits(0, 100); //100 significa valvula quente 100% aberta, frio 100%fechada
     pidControleDeValvulas.SetSampleTime(20); //sample time menor, pois o controle via misturas já é mais volátil.
+}
 
+void ControlePID::desligar(){
+    pidControleDeValvulas.SetMode(MANUAL);
+    pidControleDeResistencia.SetMode(MANUAL);
 }    
 
 void ControlePID::setModeHeat(){
@@ -38,7 +42,7 @@ void ControlePID::setModeMix(){
     pidControleDeResistencia.SetMode(MANUAL);
 
     pidControleDeValvulas.SetMode(MANUAL);
-    pidControleDeResistencia.SetMode(AUTOMATIC);
+    pidControleDeValvulas.SetMode(AUTOMATIC);
 }
 
 void ControlePID::computar(ModoOperacao modo){

@@ -22,17 +22,19 @@ void IRAM_ATTR LeitorVazao::contadorPulsosWrapper(){
 }
 
 void LeitorVazao::atualizarLeitura(){
-    if(millis() - tempo_ultimo_calculo >= 1000){
+    uint32_t agora = millis();
+    uint32_t decorrido = agora - tempo_ultimo_calculo;
+    if(decorrido >= 1000){
         portENTER_CRITICAL(&Config::flowMux);
         uint32_t pulsos = contador_pulso;
         contador_pulso = 0;
         portEXIT_CRITICAL(&Config::flowMux);
 
         // Fator de calibração do YF-B6
-        float frequencia = pulsos; //pulsos no ultimo segundo
-        vazao_Lmin = frequencia / 6.6; //pulsos/litro -> no datasheet do YF-B6 ¾ são 6.6 pulsos por litro/min
+        float frequencia = pulsos * 1000.0f / decorrido; //pulsos por segundo (o loop pode atrasar e passar de 1s)
+        vazao_Lmin = frequencia / 6.6; //no datasheet do YF-B6 ¾: f(Hz) = 6.6 * Q(L/min)
 
-        tempo_ultimo_calculo = millis();
+        tempo_ultimo_calculo = agora;
     }
 }
 

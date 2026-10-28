@@ -14,7 +14,7 @@ void ControleValvula::begin(){
 
 void ControleValvula::atualizarValvulas(){
     valvulas_QF.write(converterPIDparaAngulo(abertura_quente));
-    valvula_vazao.write(vazao);
+    valvula_vazao.write(converterPIDparaAngulo(vazao)); //vazao está em %, precisa ser convertido para ângulo
 }
 
 void ControleValvula::abrirValvulaQuente(){
@@ -23,5 +23,6 @@ void ControleValvula::abrirValvulaQuente(){
 }
 
 int ControleValvula::converterPIDparaAngulo(double PID_output){
+    PID_output = constrain(PID_output, 0.0, 100.0);
     return round(PID_output * Config::ABERTURA_MAXIMA_VALVULA/100);
 }

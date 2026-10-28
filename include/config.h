@@ -39,6 +39,10 @@ namespace Config{
     constexpr int CICLOS_ANALISADOS_PADRAO = 20;
     constexpr float MODULO_TOLERANCIA = 1.0; //1 grau de tolerância para ativar / desativar o ssr
 
+    //Configurações de interface
+    constexpr unsigned long DEBOUNCE_MS = 250;          //tempo mínimo entre dois toques válidos no botão on/off
+    constexpr unsigned long INTERVALO_DISPLAY_MS = 250; //intervalo mínimo entre atualizações do display (I2C é lento)
+
     //Configurações das válvulas motorizadas
     constexpr int ABERTURA_MAXIMA_VALVULA = 180; //valor ainda precisa ser determinado quando a válvula for desenvolvida
 

@@ -31,6 +31,7 @@ class ControlePID{
             double& output_heat,
             double& setpoint
         );
+        // input = temperatura medida na saída (feedback); setpoint = temperatura escolhida pelo usuário
 
         /**
          * @brief Setup dos PID para funcionamento.
@@ -46,6 +47,11 @@ class ControlePID{
          * @brief Altera o modo de controle para a função de misturar apenas
          */
         void setModeMix();
+
+        /**
+         * @brief Coloca ambos os PID em modo manual (sistema desligado).
+         */
+        void desligar();
 
         /**
          * @brief Atualiza as variaveis de output com base no input e no setpoint e no modo de operação atual

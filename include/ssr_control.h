@@ -26,8 +26,9 @@ class ControleSsr{
 
         /**
          * @brief Altera a quantidade de ciclos ligados e desligados na próxima etapa de controle.
+         * @param output_pid Potência desejada em % (0 a 100). Valores fora do intervalo são saturados.
          */
-        void setNumeroCiclos(float ciclos);
+        void setNumeroCiclos(float output_pid);
 
         /**
          * @brief Habilita controle ssr
@@ -40,9 +41,9 @@ class ControleSsr{
         void IRAM_ATTR disable();
 
         /**
-         * @brief Converte o output PID para um intervá-lo de ciclos
+         * @brief Converte o output PID (0 a 100%) para a quantidade de ciclos ligados dentro de ciclos_analisados
          */
-        static int converterPIDparaCiclos(float PID_OUTPUT);
+        static int converterPIDparaCiclos(float PID_OUTPUT, int ciclos_analisados);
 
     private:
         
@@ -50,8 +51,8 @@ class ControleSsr{
         hw_timer_t* _timerDisparo;                  ///< Timer de hardware do esp32
         volatile int _ciclosLigados;                ///< Quantidade de ciclos em que a onda alternada é transmitida
         int _ciclosAnalisados;                      ///< Amostragem total para controle burst firing
-        volatile bool faseOn;                       ///< Indicador de qual fase do controle está ativa
-        volatile float output_pid_compartilhado = 0;   ///< Output do pid compartilhado
+        volatile bool faseOn = false;               ///< Indicador de qual fase do controle está ativa
+        volatile int ciclos_compartilhados = 0;     ///< Ciclos ligados pedidos pelo loop, aplicados pela ISR no próximo intervalo
 
         /**
          * @brief Lógica de disparo de timer para controle de potência.

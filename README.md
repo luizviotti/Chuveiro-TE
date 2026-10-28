@@ -14,6 +14,9 @@ Chuveiro eletrônico que controla automaticamente válvulas e resistor para atin
 ## Módulos
 
 Lista rápida das classes do projeto, cada um com link para sua seção detalhada abaixo.
+
+| Módulo |
+|---|
 | [Controle de potência](#controlessr) | 
 | [Leitura de vazão](#leitorvazao) | 
 | [PID](#controlpid) |
@@ -45,7 +48,7 @@ O controle do ssr ocorre via interrupção de timer de hardware (De forma parale
 
 **Arquivos/Classes principais:**
 - `include/flow_sensor.h`
-- `src/flow_sensor.h`
+- `src/flow_sensor.cpp`
 
 **Detalhes:**
 Pelo funcionamento do YF-B6, a leitura de vazão ocorre de forma paralela no hardware, utilizando detecção de pulsos via attachInterrupt. O sensor envia varios pulsos e a partir da contagem destes é possível determinar a vazão atual em L/min.
@@ -107,6 +110,7 @@ Utiliza a lib "madhephaestus/ESP32Servo@^3.2.1". Recebe do programa principal in
 
 **Arquivos/Classes principais:**
 - `include/config.h`
+- `src/config.cpp` (definição dos `portMUX_TYPE` usados nas ISRs)
 
 **Detalhes:**
 Criei com o intuito de centralizar todas as variáveis auxiliares passíveis de teste empírico para facilitar a prototipagem.
@@ -121,7 +125,7 @@ Criei com o intuito de centralizar todas as variáveis auxiliares passíveis de 
 
 **Arquivos/Classes principais:**
 - `include/shower_control.h`
-- `src/shower_control.h`
+- `src/shower_control.cpp`
 
 **Detalhes:**
 Orquestra todo o funcionamento do chuveiro. Armazena uma instância de cada classe acima, além de pinos analógicos para input de temperatura e vazão. Coordena o setup do sistema, define o modo de operação do chuveiro com base nas leituras, computa o pid, atualiza a posição das válvulas e atualiza a fase do controle burt firing. Centraliza todas as operações principais.
@@ -150,6 +154,7 @@ atualiza display
 │   └── valve_control.h
 ├── lib/
 ├── src/
+│   ├── config.cpp
 │   ├── flow_sensor.cpp
 │   ├── main.cpp
 │   ├── pid_control.cpp
@@ -158,6 +163,7 @@ atualiza display
 │   ├── temperature_read.cpp
 │   └── valve_control.cpp
 ├── test/
+├── Uml ChuveiroTE.pdf
 ├── .gitignore
 ├── platformio.ini
 └── README.md
@@ -178,7 +184,7 @@ Controle de Servo Motores:
 - [ESP32Servo](https://registry.platformio.org/libraries/madhephaestus/ESP32Servo)
 
 Display:
-- [LiquidCrystal_I2C](https://registry.platformio.org/libraries/enjoyneering/LiquidCrystal_I2C)
+- [LiquidCrystal_I2C](https://registry.platformio.org/libraries/marcoschwartz/LiquidCrystal_I2C)
 
 ---
 

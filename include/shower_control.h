@@ -18,6 +18,7 @@ class Controller{
 
     private:
         double input_temp = 25;         ///< Input de temperatura em °C
+        double setpoint = 25;           ///< Setpoint efetivo do PID: input_temp limitado inferiormente por temp_fria
         double input_vazao = 50;        ///< Input de vazão em %
         double fluxo = 0;               ///< Vazão lida pelo sensor de fluxo
         double output_mix = 0;          ///< Output do PID de mistura
@@ -42,6 +43,8 @@ class Controller{
         uint8_t pin_ON_OFF;                     ///< Pino do botão start, stop
         volatile bool estado_atual = false;     ///< Booleano que indica o funcionamento do sistema (on, off)
         bool ultimo_estado = false;             ///< Booleano que indica o ultimo estado de funcionamento (on, off); 
+        volatile unsigned long ultimo_toque = 0;    ///< millis() do último toque válido no botão (debounce)
+        unsigned long ultima_atualizacao_display = 0; ///< millis() da última escrita no display
 
         static Controller* instancia;           ///< wrapper para utilizar pinInterrupt
 
@@ -75,9 +78,19 @@ class Controller{
         void atualizarDisplay();
 
         /**
-         * @brief Define o modo de operação do chuveiro (MIX_ONLY ou HEAT_ASSIST) e realiza a transição entre modos
+         * @brief Define o modo de operação do chuveiro (MIX_ONLY ou HEAT_ASSIST) e realiza a transição entre modos.
+         * A transição (reset de PID, enable/disable do SSR) só ocorre quando o modo muda.
+         * Vazão insuficiente ou falha nos sensores de temperatura forçam MIX_ONLY (resistência desligada).
          */
         void definirModoOperacao();
+
+        /**
+         * @brief Calcula o setpoint efetivo a partir do input do usuário.
+         * Abaixo da temperatura da fonte fria nenhuma mistura atinge o alvo: o erro do PID de mistura
+         * ficaria sempre negativo e o output preso em 0 (válvula toda fria) acumulando integral.
+         * Por isso o setpoint é limitado a temp_fria nesse caso.
+         */
+        void atualizarSetpoint();
 
         /**
          * @brief Coloca o esp em modo de repouso, desliga o funcionamento do sistema
@@ -93,6 +106,11 @@ class Controller{
          * @brief Prepara o chuveiro para desligar
          */
         void desliga();
+
+        /**
+         * @brief Prepara o chuveiro para ligar. Sempre parte do modo MIX_ONLY com a resistência desligada.
+         */
+        void liga();
 
 };
 

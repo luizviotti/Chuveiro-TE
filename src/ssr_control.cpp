@@ -7,10 +7,11 @@ ControleSsr* ControleSsr::instancia = nullptr;
 static constexpr uint32_t PERIODO_CICLO_US = 1000000UL / 60UL;
 
 ControleSsr::ControleSsr(uint8_t pinSsr, int ciclos_padrao, int ciclos_analisados):
+    _pinoSsr(pinSsr),
+    _timerDisparo(nullptr),
     _ciclosLigados(ciclos_padrao),
     _ciclosAnalisados(max(ciclos_analisados, 1)),
-    _timerDisparo(nullptr), 
-    _pinoSsr(pinSsr)
+    ciclos_compartilhados(ciclos_padrao)
     {}
 
 
@@ -24,18 +25,20 @@ void ControleSsr::begin(){
 
 }
 
-void ControleSsr::setNumeroCiclos(float ciclos){
-    if(ciclos <= 0){ return; }
+void ControleSsr::setNumeroCiclos(float output_pid){
+    //a conversão (com float) é feita aqui no loop. A ISR só copia um inteiro, evitando uso da FPU dentro da interrupção.
+    int ciclos = converterPIDparaCiclos(output_pid, _ciclosAnalisados);
     portENTER_CRITICAL(&Config::ssrMux);
-    output_pid_compartilhado = ciclos;
+    ciclos_compartilhados = ciclos;
     portEXIT_CRITICAL(&Config::ssrMux);
 }
 
 void IRAM_ATTR ControleSsr::handleTimerDisparo(){
-    //aqui o valor de ciclos ligados será alterado se a fase alternar de on -> off. !faseOn ocorre primeiro
-    if(faseOn){
+    //o valor de ciclos ligados é atualizado ao fim da fase off, ou seja, no início de um novo intervalo.
+    //assim cada intervalo tem exatamente _ciclosAnalisados ciclos (on + off).
+    if(!faseOn){
         portENTER_CRITICAL_ISR(&Config::ssrMux);
-        _ciclosLigados = converterPIDparaCiclos(output_pid_compartilhado);
+        _ciclosLigados = ciclos_compartilhados;
         portEXIT_CRITICAL_ISR(&Config::ssrMux); //previne erros de leitura, impossibilita acesso e escrita simultânea 
     }
     faseOn = !faseOn;
@@ -76,6 +79,7 @@ void ControleSsr::disable(){
     digitalWrite(_pinoSsr, LOW);
 }
 
-int ControleSsr::converterPIDparaCiclos(float PID_output){
-    return round(PID_output * Config::CICLOS_ANALISADOS_PADRAO/100);
+int ControleSsr::converterPIDparaCiclos(float PID_output, int ciclos_analisados){
+    PID_output = constrain(PID_output, 0.0f, 100.0f);
+    return (int)lroundf(PID_output * ciclos_analisados / 100.0f);
 }

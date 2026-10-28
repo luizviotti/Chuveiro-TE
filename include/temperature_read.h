@@ -26,6 +26,7 @@ class LeitorTemperatura{
         unsigned long ultimaSolicitacao = 0;        ///< Contador de quando foi a ultima solicitação de leitura
         const unsigned long TEMPO_CONVERSAO = 400;  ///< Constante de tempo de conversão (Para 11 bits de leitura)
         bool aguardandoConversao = false;           ///< Booleano de conversão
+        bool leitura_valida = false;                ///< Última leitura completa e sem sensores desconectados
 
     public:
         /**
@@ -47,6 +48,12 @@ class LeitorTemperatura{
          * @brief Realiza uma nova leitura das temperaturas
          */
         void atualizarTemperatura();
+
+        /**
+         * @brief true se já houve ao menos uma leitura e nenhum sensor está desconectado/inválido.
+         * Enquanto false o sistema não deve acionar a resistência.
+         */
+        bool leituraValida() const;
 
 };
 
